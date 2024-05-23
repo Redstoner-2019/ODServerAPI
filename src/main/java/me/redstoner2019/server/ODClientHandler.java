@@ -39,7 +39,7 @@ public class ODClientHandler {
                         for(ObjectRecieveEvent e : recieveEvents){
                             e.onEvent(o);
                         }
-                    } catch (IOException | ClassNotFoundException e) {
+                    } catch (Exception e) {
                         if(!disconnecting) for(ConnectionLostEvent con : connectionLostEvents){
                             con.onEvent();
                         }
