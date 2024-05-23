@@ -9,7 +9,7 @@ public class Server extends ODServer {
         Server server = new Server();
     }
     public Server(){
-        setPort(1234);
+        setPort(8008);
         addClientConnectEvent(new ClientConnectEvent() {
             @Override
             public void onEvent(ODClientHandler handler) {

@@ -24,7 +24,9 @@ public class ODClientHandler {
             this.oos = new ObjectOutputStream(socket.getOutputStream());
             this.ois = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            if(!disconnecting) for(ConnectionLostEvent con : connectionLostEvents){
+                con.onEvent();
+            }
         }
     }
     public void startListener(){
