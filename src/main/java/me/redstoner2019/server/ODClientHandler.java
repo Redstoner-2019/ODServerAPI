@@ -1,6 +1,5 @@
 package me.redstoner2019.server;
 
-import me.redstoner2019.events.ClientConnectEvent;
 import me.redstoner2019.events.ConnectionLostEvent;
 import me.redstoner2019.events.ObjectRecieveEvent;
 
