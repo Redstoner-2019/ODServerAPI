@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ODClientHandler {
@@ -16,6 +17,7 @@ public class ODClientHandler {
     private ObjectInputStream ois;
     private List<ObjectRecieveEvent> recieveEvents = new ArrayList<>();
     private List<ConnectionLostEvent> connectionLostEvents = new ArrayList<>();
+    public HashMap<String, Object> localData = new HashMap<>();
     private boolean disconnecting;
     public ODClientHandler(Socket socket){
         try {
@@ -72,5 +74,17 @@ public class ODClientHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public ObjectOutputStream getOos() {
+        return oos;
+    }
+
+    public ObjectInputStream getOis() {
+        return ois;
     }
 }
