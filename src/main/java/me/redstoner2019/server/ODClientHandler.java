@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ODClientHandler {
@@ -16,40 +17,13 @@ public class ODClientHandler {
     private ObjectInputStream ois;
     private List<ObjectRecieveEvent> recieveEvents = new ArrayList<>();
     private List<ConnectionLostEvent> connectionLostEvents = new ArrayList<>();
-    private ODServer server = null;
+    public HashMap<String, Object> localData = new HashMap<>();
     private boolean disconnecting;
-    private ODClientHandler handler = this;
-
-    public boolean isDisconnecting() {
-        return disconnecting;
-    }
-
-    public List<ConnectionLostEvent> getConnectionLostEvents() {
-        return connectionLostEvents;
-    }
-
-    public List<ObjectRecieveEvent> getRecieveEvents() {
-        return recieveEvents;
-    }
-
-    public ObjectInputStream getOis() {
-        return ois;
-    }
-
-    public ObjectOutputStream getOos() {
-        return oos;
-    }
-
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public ODClientHandler(Socket socket, ODServer server){
+    public ODClientHandler(Socket socket){
         try {
             this.socket = socket;
             this.oos = new ObjectOutputStream(socket.getOutputStream());
             this.ois = new ObjectInputStream(socket.getInputStream());
-            this.server = server;
         } catch (IOException e) {
             if(!disconnecting) for(ConnectionLostEvent con : connectionLostEvents){
                 con.onEvent();
@@ -69,7 +43,6 @@ public class ODClientHandler {
                     } catch (Exception e) {
                         if(!disconnecting) for(ConnectionLostEvent con : connectionLostEvents){
                             con.onEvent();
-                            server.removeClient(handler);
                         }
                         break;
                     }
@@ -101,5 +74,17 @@ public class ODClientHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public ObjectOutputStream getOos() {
+        return oos;
+    }
+
+    public ObjectInputStream getOis() {
+        return ois;
     }
 }
