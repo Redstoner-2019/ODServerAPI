@@ -21,6 +21,23 @@ public class ODClient {
     private ObjectOutputStream oos;
     private ObjectInputStream ois;
     private boolean disconnecting;
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public ObjectOutputStream getOos() {
+        return oos;
+    }
+
+    public ObjectInputStream getOis() {
+        return ois;
+    }
+
+    public boolean isDisconnecting() {
+        return disconnecting;
+    }
+
     public void connect(String ip, int port){
         try {
             socket = new Socket(ip,port);

@@ -11,6 +11,12 @@ import java.util.List;
 public class ODServer {
     private int port;
     private List<ClientConnectEvent> connectEvents = new ArrayList<>();
+    private List<ODClientHandler> clients = new ArrayList<>();
+
+    public List<ODClientHandler> getClients() {
+        return clients;
+    }
+
     public ODServer(){}
 
     public int getPort() {
@@ -25,7 +31,8 @@ public class ODServer {
             ServerSocket serverSocket = new ServerSocket(port);
             while (serverSocket.isBound()){
                 Socket socket = serverSocket.accept();
-                ODClientHandler clientHandler = new ODClientHandler(socket);
+                ODClientHandler clientHandler = new ODClientHandler(socket, this);
+                clients.add(clientHandler);
                 for(ClientConnectEvent c : connectEvents){
                     c.onEvent(clientHandler);
                 }
@@ -34,7 +41,14 @@ public class ODServer {
             System.err.println(e.getLocalizedMessage());
         }
     }
+    public void removeClient(ODClientHandler c){
+        clients.remove(c);
+    }
     public void addClientConnectEvent(ClientConnectEvent clientConnectEvent){
         connectEvents.add(clientConnectEvent);
+    }
+
+    public List<ClientConnectEvent> getConnectEvents() {
+        return connectEvents;
     }
 }

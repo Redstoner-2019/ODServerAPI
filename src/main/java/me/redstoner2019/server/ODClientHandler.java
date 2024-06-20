@@ -16,12 +16,40 @@ public class ODClientHandler {
     private ObjectInputStream ois;
     private List<ObjectRecieveEvent> recieveEvents = new ArrayList<>();
     private List<ConnectionLostEvent> connectionLostEvents = new ArrayList<>();
+    private ODServer server = null;
     private boolean disconnecting;
-    public ODClientHandler(Socket socket){
+    private ODClientHandler handler = this;
+
+    public boolean isDisconnecting() {
+        return disconnecting;
+    }
+
+    public List<ConnectionLostEvent> getConnectionLostEvents() {
+        return connectionLostEvents;
+    }
+
+    public List<ObjectRecieveEvent> getRecieveEvents() {
+        return recieveEvents;
+    }
+
+    public ObjectInputStream getOis() {
+        return ois;
+    }
+
+    public ObjectOutputStream getOos() {
+        return oos;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public ODClientHandler(Socket socket, ODServer server){
         try {
             this.socket = socket;
             this.oos = new ObjectOutputStream(socket.getOutputStream());
             this.ois = new ObjectInputStream(socket.getInputStream());
+            this.server = server;
         } catch (IOException e) {
             if(!disconnecting) for(ConnectionLostEvent con : connectionLostEvents){
                 con.onEvent();
@@ -41,6 +69,7 @@ public class ODClientHandler {
                     } catch (Exception e) {
                         if(!disconnecting) for(ConnectionLostEvent con : connectionLostEvents){
                             con.onEvent();
+                            server.removeClient(handler);
                         }
                         break;
                     }
